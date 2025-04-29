@@ -62,9 +62,6 @@ public class OrderServiceImpl implements OrderService {
                         for(CartItem cartItem: cartItemsList){
                             CartDTO cart  = new CartDTO();
                             cart.setProductId(cartItem.getCartProduct().getProductId());
-                          //  cartservice.removeProductFromCart(cart,token);
-                        //    Optional<Product> opt = productDao.findById();
-
                             Product product = cartItem.getCartProduct();
                             reduceProductQuantity(product,cartItem.getCartItemQuantity());
                             if(product.getQuantity()-1 > 0){
@@ -84,6 +81,7 @@ public class OrderServiceImpl implements OrderService {
                         newOrder.setDate(LocalDate.now());
                         newOrder.setOrderStatus(OrderStatusValues.SUCCESS);
                         newOrder.setOrderCartItems(productInOrder);
+                        cartservice.clearCart(token);
                         return oDao.save(newOrder);
                     }
                 } else {
@@ -91,7 +89,7 @@ public class OrderServiceImpl implements OrderService {
                     newOrder.setCardNumber(odto.getCardNumber().getCardNumber());
                     newOrder.setAddress(loggedInCustomer.getAddress().get(odto.getAddressType()));
                     newOrder.setDate(LocalDate.now());
-                    newOrder.setOrderStatus(OrderStatusValues.PENDING);
+                    newOrder.setOrderStatus(OrderStatusValues.EMPTY_CART);
                     newOrder.setOrderCartItems(productInOrder);
                     return oDao.save(newOrder);
                 }
@@ -100,7 +98,7 @@ public class OrderServiceImpl implements OrderService {
                 newOrder.setCardNumber(odto.getCardNumber().getCardNumber());
                 newOrder.setAddress(loggedInCustomer.getAddress().get(odto.getAddressType()));
                 newOrder.setDate(LocalDate.now());
-                newOrder.setOrderStatus(OrderStatusValues.PENDING);
+                newOrder.setOrderStatus(OrderStatusValues.EMPTY_CART);
                 return oDao.save(newOrder);
             }
         }else{
@@ -135,5 +133,8 @@ public class OrderServiceImpl implements OrderService {
         productDao.save(p);
     }
 
-
+    @Override
+    public int updateOrderStatus(Integer orderId, OrderStatusValues status){
+        return oDao.updateOrderStatusById(orderId,status);
+    }
 }
