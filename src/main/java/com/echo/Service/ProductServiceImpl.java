@@ -26,7 +26,8 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public Product addProductToCatalog(String token, Product product) throws LoginException {
-        Product product1 = product;
+        Product product1 = productDao.save(product);
+
         Seller seller = sellerService.getCurrentlyLoggedInSeller(token);
 
         if(seller != null){
@@ -40,7 +41,7 @@ public class ProductServiceImpl implements ProductService{
             seller.setProduct(productList);
             product1.setSeller(seller);
             sellerDao.save(seller);
-            productDao.save(product1);
+//            productDao.save(product1);
         }else{
             throw new LoginException("Seller not found");
         }
