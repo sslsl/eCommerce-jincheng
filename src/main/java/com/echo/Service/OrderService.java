@@ -4,6 +4,7 @@ import com.echo.exception.OrderException;
 import com.echo.models.Customer;
 import com.echo.models.Order;
 import com.echo.models.OrderDTO;
+import com.echo.models.OrderStatusValues;
 
 import javax.security.auth.login.LoginException;
 import java.time.LocalDate;
@@ -16,4 +17,6 @@ public interface OrderService {
     public Order getOrderByOrderId(Integer OrderId);
 
     public List<Order> getAllOrders() throws OrderException;
+
+    public int updateOrderStatus(Integer orderId, OrderStatusValues status);
 }
